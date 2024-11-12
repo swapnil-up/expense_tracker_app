@@ -1,8 +1,10 @@
+import 'package:expense_tracker_app/models/expense_categories.dart';
+
 class Expense {
   final String title;
   final int amount;
   final DateTime dateTime;
-  final Enum category;
+  final ExpenseCategory category;
 
   Expense(
       {required this.title,
@@ -15,7 +17,7 @@ class Expense {
       'title': title,
       'amount': amount,
       'date': dateTime.toIso8601String(),
-      'category': category
+      'category': category.toString().split('.').last,
     };
   }
 
@@ -24,7 +26,8 @@ class Expense {
       title: map['title'],
       amount: map['amount'],
       dateTime: DateTime.parse(map['date']),
-      category: map['category'],
+      category: ExpenseCategory.values.firstWhere(
+          (element) => element.toString().split('.').last == map['category']),
     );
   }
 }
