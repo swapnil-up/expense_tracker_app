@@ -1,22 +1,34 @@
 import 'package:expense_tracker_app/models/expense_model.dart';
+import 'package:expense_tracker_app/services/db_helper.dart';
 import 'package:flutter/material.dart';
 
-class ExpenseProvider with ChangeNotifier{
-  List<Expense> _expenses=[];
-  List<Expense> get expenses=>_expenses;
+class ExpenseProvider with ChangeNotifier {
+  List<Expense> _expenses = [];
+  List<Expense> get expenses => _expenses;
 
-  void addExpenses(Expense expense){
-    _expenses.add(expense);
-    notifyListeners();
+  Future<void> loadExpense() async {
+    try {
+      _expenses = await DBHelper.instance.fetchAllExpense();
+      print("successful load");
+      notifyListeners();
+    } catch (error) {
+      print("Error loading expenses: $error");
+    }
   }
 
-  void removeExpenses(Expense expense){
-    _expenses.remove(expense);
-    notifyListeners();
+  void addExpenses(Expense expense) async {
+    await DBHelper.instance.insertExpense(expense);
+    await loadExpense();
   }
 
-  void clearExpenses(Expense expense){
-    _expenses=[];
+  void removeExpenses(int id) async {
+    await DBHelper.instance.removeExpense(id);
+    await loadExpense();
+  }
+
+  void clearExpenses() async {
+    await DBHelper.instance.clearAllExpense();
+    _expenses = [];
     notifyListeners();
   }
 }

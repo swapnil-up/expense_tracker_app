@@ -33,6 +33,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             ),
             TextField(
               controller: _amountController,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: 'Amount'),
             ),
             Row(
@@ -80,7 +81,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   );
                   Provider.of<ExpenseProvider>(context, listen: false)
                       .addExpenses(expense);
-                  Navigator.pop(context);
+                  Navigator.pop(context, true);
                 },
                 child: Text('Add Expense'))
           ],
