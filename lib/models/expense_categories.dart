@@ -1,4 +1,5 @@
 enum ExpenseCategory {
+  All,
   Food,
   Transport,
   Entertainment,

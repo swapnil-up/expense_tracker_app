@@ -1,5 +1,6 @@
 import 'package:expense_tracker_app/providers/expense_provider.dart';
 import 'package:expense_tracker_app/screens/add_expense_screen.dart';
+import 'package:expense_tracker_app/widgets/filter_sort_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         title: const Text(
           'ExpenseScreen',
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: () {
+              _showFilteredModal(context);
+            },
+          )
+        ],
       ),
       body: FutureBuilder(
           future: _loadExpensesFuture,
@@ -39,13 +48,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
               );
             } else if (expenseProvider.expenses.isEmpty) {
               return Center(
-                child: Text('Add your first expense'),
+                child: Text('Nothing to see here'),
               );
             } else {
               return ListView.builder(
-                itemCount: expenseProvider.expenses.length,
+                itemCount: expenseProvider.filteredExpenses.length,
                 itemBuilder: (context, index) {
-                  final expense = expenseProvider.expenses[index];
+                  final expense = expenseProvider.filteredExpenses[index];
                   return ListTile(
                     title: Text(expense.title),
                     subtitle: Text(expense.amount.toString()),
@@ -67,15 +76,23 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             MaterialPageRoute(
               builder: (context) => AddExpenseScreen(),
             ),
-          ); 
-          if (result==true){
+          );
+          if (result == true) {
             setState(() {
-              _loadExpensesFuture=expenseProvider.loadExpense();
+              _loadExpensesFuture = expenseProvider.loadExpense();
             });
           }
         },
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  void _showFilteredModal(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return FilterSortOptions();
+        });
   }
 }

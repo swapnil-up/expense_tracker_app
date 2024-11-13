@@ -59,7 +59,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             ),
             DropdownButton<ExpenseCategory>(
               value: _category,
-              items: ExpenseCategory.values.map((ExpenseCategory category) {
+              items: ExpenseCategory.values
+                  .skip(1)
+                  .map((ExpenseCategory category) {
                 return DropdownMenuItem<ExpenseCategory>(
                   value: category,
                   child: Text(category.toString().split('.').last),
