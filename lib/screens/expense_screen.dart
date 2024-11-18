@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/models/expense_categories.dart';
 import 'package:expense_tracker_app/providers/expense_provider.dart';
 import 'package:expense_tracker_app/screens/add_expense_screen.dart';
+import 'package:expense_tracker_app/widgets/category_pie_chart.dart';
 import 'package:expense_tracker_app/widgets/filter_sort_options.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,36 +41,53 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
           )
         ],
       ),
-      body: FutureBuilder(
-          future: _loadExpensesFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (expenseProvider.expenses.isEmpty) {
-              return Center(
-                child: Text('Nothing to see here'),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: expenseProvider.filteredExpenses.length,
-                itemBuilder: (context, index) {
-                  final expense = expenseProvider.filteredExpenses[index];
-                  return ListTile(
-                    title: Text(expense.title),
-                    subtitle: Text(expense.amount.toString()),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        expenseProvider.removeExpenses(expense.id!);
-                      },
-                    ),
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder(
+              future: _loadExpensesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                },
-              );
-            }
-          }),
+                } else if (expenseProvider.expenses.isEmpty) {
+                  return Center(
+                    child: Text('Nothing to see here'),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: expenseProvider.filteredExpenses.length,
+                    itemBuilder: (context, index) {
+                      final expense = expenseProvider.filteredExpenses[index];
+                      return ListTile(
+                        title: Text(expense.title),
+                        subtitle: Text(expense.amount.toString()),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () {
+                            expenseProvider.removeExpenses(expense.id!);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+            child: CategoryPieChart(),
+          )
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(

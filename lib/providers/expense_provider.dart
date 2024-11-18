@@ -48,4 +48,15 @@ class ExpenseProvider with ChangeNotifier {
     _expenses = [];
     notifyListeners();
   }
+
+  Map<ExpenseCategory, double> getCategoryTotals() {
+    Map<ExpenseCategory, double> categoryTotals = {};
+
+    for (var category in ExpenseCategory.values.skip(1)) {
+      categoryTotals[category] = _expenses
+          .where((expense) => expense.category == category)
+          .fold(0, (sum, expense) => sum + expense.amount);
+    }
+    return categoryTotals;
+  }
 }
