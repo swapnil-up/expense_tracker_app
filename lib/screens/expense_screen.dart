@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/models/expense_categories.dart';
 import 'package:expense_tracker_app/providers/expense_provider.dart';
 import 'package:expense_tracker_app/screens/add_expense_screen.dart';
 import 'package:expense_tracker_app/widgets/filter_sort_options.dart';
@@ -88,11 +89,16 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     );
   }
 
-  void _showFilteredModal(BuildContext context) {
-    showModalBottomSheet(
+  void _showFilteredModal(BuildContext context) async {
+    final selectedCategory = await showModalBottomSheet<ExpenseCategory>(
         context: context,
         builder: (context) {
-          return FilterSortOptions();
+          return const FilterSortOptions();
         });
+
+    if (selectedCategory != null) {
+      Provider.of<ExpenseProvider>(context, listen: false)
+          .setCategoryFilter(selectedCategory);
+    }
   }
 }

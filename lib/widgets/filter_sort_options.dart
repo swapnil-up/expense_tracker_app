@@ -9,8 +9,7 @@ class FilterSortOptions extends StatefulWidget {
 }
 
 class _FilterSortOptionsState extends State<FilterSortOptions> {
-  ExpenseCategory _selectedCategory = ExpenseCategory.Food;
-  String _sortOption = 'Amount';
+  ExpenseCategory _selectedCategory = ExpenseCategory.All;
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +18,24 @@ class _FilterSortOptionsState extends State<FilterSortOptions> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Filter and Sort'),
+          const Text('Filter by Category'),
           DropdownButton<ExpenseCategory>(
-              value: _selectedCategory,
-              items: ExpenseCategory.values
-                  .skip(1)
-                  .map((ExpenseCategory category) {
-                return DropdownMenuItem<ExpenseCategory>(
-                  value: category,
-                  child: Text(category.toString().split('.').last),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value!;
-                });
-              }),
+            value: _selectedCategory,
+            items: ExpenseCategory.values.map((ExpenseCategory category) {
+              return DropdownMenuItem<ExpenseCategory>(
+                value: category,
+                child: Text(category.toString().split('.').last),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedCategory = value!;
+              });
+            },
+          ),
           ElevatedButton(
             onPressed: () {
-              Navigator.of(context).pop({
-                'category': _selectedCategory,
-                'sort': _sortOption,
-              });
+              Navigator.of(context).pop(_selectedCategory);
             },
             child: const Text('Apply'),
           ),
