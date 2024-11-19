@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/models/expense_categories.dart';
 import 'package:expense_tracker_app/providers/expense_provider.dart';
 import 'package:expense_tracker_app/screens/add_expense_screen.dart';
+import 'package:expense_tracker_app/services/export_expenses_to_csv.dart';
 import 'package:expense_tracker_app/widgets/category_pie_chart.dart';
 import 'package:expense_tracker_app/widgets/filter_sort_options.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             onPressed: () {
               _showFilteredModal(context);
             },
-          )
+          ),
+          IconButton(
+            onPressed: () {
+              ExportExpensesToCsv(context, expenseProvider.expenses);
+            },
+            icon: Icon(Icons.download),
+          ),
         ],
       ),
       body: Column(
